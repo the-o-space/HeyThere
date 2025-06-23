@@ -29,8 +29,8 @@ Users get location permission, snap coordinates to a grid cell, and join a PubSu
 
 1. **Clone and install:**
    ```bash
-   git clone https://github.com/yourusername/proximity-p2p-chat.git
-   cd proximity-p2p-chat
+   git clone https://github.com/the-o-space/HeyThere.git
+   cd HeyThere
    npm install
    ```
 
