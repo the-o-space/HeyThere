@@ -11,6 +11,7 @@ import { yamux } from '@chainsafe/libp2p-yamux';
 import { kadDHT } from '@libp2p/kad-dht';
 import { identify } from '@libp2p/identify';
 import { config } from 'dotenv';
+import { ping } from '@libp2p/ping';
 
 // Load environment variables
 config();
@@ -53,7 +54,8 @@ async function startBootstrapNode() {
             proximityChat: () => 0
           }
         }),
-        identify: identify()
+        identify: identify(),
+        ping: ping()
       }
     });
 

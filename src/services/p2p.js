@@ -13,6 +13,8 @@ import { kadDHT } from '@libp2p/kad-dht';
 import { bootstrap } from '@libp2p/bootstrap';
 import { identify } from '@libp2p/identify';
 import bootstrapNodes from '../config/bootstrapNodes.js';
+import { circuitRelayTransport, circuitRelayServer } from '@libp2p/circuit-relay-v2';
+import { ping } from '@libp2p/ping';
 
 class P2PService {
   constructor() {
@@ -31,7 +33,8 @@ class P2PService {
         // Network transports
         transports: [
           webSockets(),
-          webRTC()
+          webRTC(),
+          circuitRelayTransport()
         ],
         
         // Connection encryption
@@ -54,7 +57,9 @@ class P2PService {
           dht: kadDHT({
             clientMode: true // Mobile devices act as DHT clients only
           }),
-          identify: identify()
+          identify: identify(),
+          relay: circuitRelayServer({ advertise: true }),
+          ping: ping(),
         }
       });
 

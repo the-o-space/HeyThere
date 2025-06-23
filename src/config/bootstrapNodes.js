@@ -11,7 +11,10 @@ export const bootstrapNodes = [
 
 // Development bootstrap nodes (local testing)
 export const devBootstrapNodes = [
-  // Add local bootstrap nodes for development
+  '/ip4/127.0.0.1/tcp/4001/ws/p2p/12D3KooWGoApCT8yP6xC6JDBMHdW5toCnMSFY1ykyuoR6Ssyr7Ck',
+  '/ip4/192.168.50.77/tcp/4001/ws/p2p/12D3KooWGoApCT8yP6xC6JDBMHdW5toCnMSFY1ykyuoR6Ssyr7Ck',
+  '/ip4/127.0.0.1/tcp/4002/p2p/12D3KooWGoApCT8yP6xC6JDBMHdW5toCnMSFY1ykyuoR6Ssyr7Ck',
+  '/ip4/192.168.50.77/tcp/4002/p2p/12D3KooWGoApCT8yP6xC6JDBMHdW5toCnMSFY1ykyuoR6Ssyr7Ck',
 ];
 
 export default process.env.NODE_ENV === 'development' ? devBootstrapNodes : bootstrapNodes; 
