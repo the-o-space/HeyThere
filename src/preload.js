@@ -3,10 +3,13 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('messenger', {
-  connect: (bootstrapAddress) => ipcRenderer.invoke('connect', bootstrapAddress),
+  connect: (serverUrl, options) => ipcRenderer.invoke('connect', serverUrl, options),
+  updateLocation: (lat, lon) => ipcRenderer.invoke('updateLocation', lat, lon),
+  connectToPeer: (peerId) => ipcRenderer.invoke('connectToPeer', peerId),
   disconnect: () => ipcRenderer.invoke('disconnect'),
   sendMessage: (message) => ipcRenderer.invoke('sendMessage', message),
   
+  // Event listeners
   onPeerJoined: (callback) => {
     ipcRenderer.on('peer-joined', (event, peerId) => callback(peerId));
   },
@@ -25,5 +28,17 @@ contextBridge.exposeInMainWorld('messenger', {
   
   onDisconnected: (callback) => {
     ipcRenderer.on('disconnected', () => callback());
+  },
+  
+  onNearbyPeers: (callback) => {
+    ipcRenderer.on('nearbyPeers', (event, peers) => callback(peers));
+  },
+  
+  onDiscoveryDisconnected: (callback) => {
+    ipcRenderer.on('discovery-disconnected', () => callback());
+  },
+  
+  onError: (callback) => {
+    ipcRenderer.on('error', (event, error) => callback(error));
   }
 });

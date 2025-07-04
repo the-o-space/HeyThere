@@ -1,13 +1,15 @@
 # HeyThere Messenger
 
-A decentralized, ephemeral messaging application built with Electron and Hyperswarm DHT.
+A location-based ephemeral messaging application built with Electron and WebRTC.
 
 ## Features
 
-- **Decentralized**: No central server required, uses DHT for peer discovery
+- **Location-based discovery**: Find and chat with people nearby
+- **P2P messaging**: Direct peer-to-peer connections via WebRTC
 - **Ephemeral**: Messages are not stored anywhere, exist only during the session
-- **Simple**: Clean, modern UI with dark theme
-- **Secure**: Electron's context isolation and secure IPC communication
+- **Privacy-focused**: Manual location input option for enhanced privacy
+- **Federated**: Anyone can run their own discovery server
+- **Modern UI**: Clean dark theme with smooth animations
 
 ## Installation
 
@@ -23,22 +25,30 @@ npm install
 npm start
 ```
 
-### Running a Bootstrap Server (Optional)
+### Running a Discovery Server
 
-For initial peer discovery, you can run a bootstrap server:
+Navigate to the discovery-server directory and install dependencies:
 
 ```bash
-node bootstrap/server.js
+cd discovery-server
+npm install
+npm start
 ```
 
-The bootstrap server will display connection information including:
-- Bootstrap address (e.g., `localhost:4001`)
-- Topic hex for direct connection
+The discovery server will run on port 3001 by default. You can configure:
+- Port: `PORT=3001 npm start`
+- Proximity radius: `RADIUS=10 npm start` (in kilometers)
 
-### Connecting to a Chat Room
+### Connecting to Nearby People
 
-1. **Using a Bootstrap Server**: Enter the bootstrap address (e.g., `localhost:4001`)
-2. **Using Topic Hex**: Enter the topic hex directly to join a specific room
+1. Enter your nickname (optional - will generate one if empty)
+2. Enter your location:
+   - Manually input latitude and longitude, or
+   - Click the 📍 button to detect your current location
+3. Enter discovery server URL (default: `ws://localhost:3001`)
+4. Click "Connect to Nearby"
+
+Once connected, you'll see a list of nearby people and can connect to chat with them.
 
 ## Development
 
@@ -53,16 +63,33 @@ npm run make
 ## Architecture
 
 - **Main Process** (`src/index.js`): Handles Electron window management and IPC
-- **NetworkManager** (`src/network/NetworkManager.js`): Manages DHT connections and messaging
+- **LocationNetworkManager** (`src/network/LocationNetworkManager.js`): Manages WebRTC connections and discovery
+- **Discovery Server** (`discovery-server/server.js`): Facilitates location-based peer discovery
 - **Renderer** (`src/renderer.js`): UI logic and user interactions
 - **Preload** (`src/preload.js`): Secure bridge between main and renderer processes
 
 ## How It Works
 
-1. The app uses Hyperswarm to create a DHT network
-2. Peers discover each other through the DHT using a shared topic
-3. Messages are broadcast directly between connected peers
-4. No messages are stored - everything is ephemeral
+1. Users connect to a discovery server with their location
+2. The server matches users within a configurable radius (default 5km)
+3. Matched users establish direct P2P connections via WebRTC
+4. Messages are sent directly between peers
+5. Discovery server only handles matching - messages never pass through it
+
+## Privacy
+
+- Location data is only used for proximity matching
+- You can manually enter any coordinates for privacy
+- Messages are never stored or logged
+- P2P connections continue even if discovery server disconnects
+
+## Running Your Own Discovery Server
+
+The discovery server is designed to be federated. To run your own:
+
+1. Deploy the discovery-server to any Node.js host
+2. Configure your domain/IP and port
+3. Share the WebSocket URL with your community
 
 ## Requirements
 

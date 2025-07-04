@@ -2,25 +2,23 @@
   "name": "heythere-messenger",
   "productName": "HeyThere Messenger",
   "version": "1.0.0",
-  "description": "Decentralized ephemeral messenger using DHT",
+  "description": "Location-based ephemeral messenger with P2P connections",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "bootstrap": "node bootstrap/server.js"
+    "lint": "echo \"No linting configured\""
   },
-  "keywords": ["electron", "messenger", "dht", "p2p", "decentralized", "hyperswarm"],
+  "keywords": ["electron", "messenger", "location", "p2p", "webrtc", "ephemeral", "proximity"],
   "author": {
     "name": "Fedor Ryzhenkov",
     "email": "github@xn--the-2na.space"
   },
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1",
-    "hyperswarm": "^4.11.7"
+    "electron-squirrel-startup": "^1.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.8.1",

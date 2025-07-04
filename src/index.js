@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
-const NetworkManager = require('./network/NetworkManager');
+const LocationNetworkManager = require('./network/LocationNetworkManager');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -44,12 +44,30 @@ app.whenReady().then(() => {
   createWindow();
   
   // Initialize network manager
-  networkManager = new NetworkManager();
+  networkManager = new LocationNetworkManager();
   
   // Set up IPC handlers
-  ipcMain.handle('connect', async (event, bootstrapAddress) => {
+  ipcMain.handle('connect', async (event, serverUrl, options) => {
     try {
-      await networkManager.connect(bootstrapAddress);
+      const result = await networkManager.connectWithLocation(serverUrl, options);
+      return { success: true, ...result };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('updateLocation', async (event, lat, lon) => {
+    try {
+      networkManager.updateLocation(lat, lon);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('connectToPeer', async (event, peerId) => {
+    try {
+      await networkManager.connectToPeer(peerId);
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
@@ -71,24 +89,52 @@ app.whenReady().then(() => {
   });
   
   // Forward network events to renderer
+  networkManager.on('nearbyPeers', (peers) => {
+    if (mainWindow) {
+      mainWindow.webContents.send('nearbyPeers', peers);
+    }
+  });
+  
   networkManager.on('peer-joined', (peerId) => {
-    if (mainWindow) mainWindow.webContents.send('peer-joined', peerId);
+    if (mainWindow) {
+      mainWindow.webContents.send('peer-joined', peerId);
+    }
   });
   
   networkManager.on('peer-left', (peerId) => {
-    if (mainWindow) mainWindow.webContents.send('peer-left', peerId);
+    if (mainWindow) {
+      mainWindow.webContents.send('peer-left', peerId);
+    }
   });
   
   networkManager.on('message', (data) => {
-    if (mainWindow) mainWindow.webContents.send('message', data);
+    if (mainWindow) {
+      mainWindow.webContents.send('message', data);
+    }
   });
   
   networkManager.on('connected', () => {
-    if (mainWindow) mainWindow.webContents.send('connected');
+    if (mainWindow) {
+      mainWindow.webContents.send('connected');
+    }
   });
   
   networkManager.on('disconnected', () => {
-    if (mainWindow) mainWindow.webContents.send('disconnected');
+    if (mainWindow) {
+      mainWindow.webContents.send('disconnected');
+    }
+  });
+  
+  networkManager.on('discovery-disconnected', () => {
+    if (mainWindow) {
+      mainWindow.webContents.send('discovery-disconnected');
+    }
+  });
+  
+  networkManager.on('error', (error) => {
+    if (mainWindow) {
+      mainWindow.webContents.send('error', error);
+    }
   });
 
   // On OS X it's common to re-create a window in the app when the

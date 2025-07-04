@@ -10,21 +10,56 @@
       <!-- Connection Panel -->
       <div class="connection-panel" id="connectionPanel">
         <h1>HeyThere Messenger</h1>
-        <p class="subtitle">Decentralized, ephemeral messaging</p>
+        <p class="subtitle">Location-based ephemeral messaging</p>
         
         <div class="connection-form">
           <input 
             type="text" 
-            id="bootstrapInput" 
-            placeholder="Enter bootstrap address (e.g., localhost:4001)"
+            id="nicknameInput" 
+            placeholder="Your nickname"
             class="input-field"
+            maxlength="20"
           >
-          <button id="connectBtn" class="btn btn-primary">Connect</button>
+          
+          <div class="location-input-group">
+            <input 
+              type="number" 
+              id="latitudeInput" 
+              placeholder="Latitude (e.g., 51.5074)"
+              class="input-field location-field"
+              step="0.0001"
+              min="-90"
+              max="90"
+            >
+            <input 
+              type="number" 
+              id="longitudeInput" 
+              placeholder="Longitude (e.g., -0.1278)"
+              class="input-field location-field"
+              step="0.0001"
+              min="-180"
+              max="180"
+            >
+            <button id="detectLocationBtn" class="btn btn-secondary" title="Use current location">
+              📍
+            </button>
+          </div>
+          
+          <input 
+            type="text" 
+            id="discoveryServerInput" 
+            placeholder="Discovery server (e.g., ws://localhost:3001)"
+            class="input-field"
+            value="ws://localhost:3001"
+          >
+          
+          <button id="connectBtn" class="btn btn-primary">Connect to Nearby</button>
         </div>
         
         <div class="info-text">
-          <p>Connect to a bootstrap node or enter a topic hex to join a chat room.</p>
+          <p>Enter your location manually or use geolocation to find people nearby.</p>
           <p>Messages are ephemeral and not stored anywhere.</p>
+          <p class="privacy-note">Your location is only used for proximity matching, not tracking.</p>
         </div>
       </div>
 
@@ -32,11 +67,19 @@
       <div class="chat-panel hidden" id="chatPanel">
         <div class="chat-header">
           <div class="header-info">
-            <h2>Chat Room</h2>
+            <h2>Local Chat</h2>
+            <span class="nickname-display" id="nicknameDisplay" title="Click to change nickname"></span>
+            <span class="location-display" id="locationDisplay"></span>
             <span class="status" id="connectionStatus">Connected</span>
             <span class="peer-count" id="peerCount">0 peers</span>
           </div>
           <button id="disconnectBtn" class="btn btn-secondary">Disconnect</button>
+        </div>
+
+        <!-- Nearby Peers List -->
+        <div class="nearby-peers" id="nearbyPeersPanel">
+          <h3>Nearby People</h3>
+          <div class="peers-list" id="peersList"></div>
         </div>
 
         <div class="chat-container">
