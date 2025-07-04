@@ -1,39 +1,36 @@
 {
-  "name": "heythere",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "heythere-messenger",
+  "productName": "HeyThere Messenger",
+  "version": "1.0.0",
+  "description": "Decentralized ephemeral messenger using DHT",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\"",
+    "bootstrap": "node bootstrap/server.js"
   },
+  "keywords": ["electron", "messenger", "dht", "p2p", "decentralized", "hyperswarm"],
+  "author": {
+    "name": "Fedor Ryzhenkov",
+    "email": "github@xn--the-2na.space"
+  },
+  "license": "MIT",
   "dependencies": {
-    "@chainsafe/libp2p-gossipsub": "^14.1.1",
-    "@chainsafe/libp2p-noise": "^16.1.3",
-    "@chainsafe/libp2p-yamux": "^7.0.2",
-    "@libp2p/bootstrap": "^11.0.42",
-    "@libp2p/circuit-relay-v2": "^3.2.19",
-    "@libp2p/identify": "^3.0.36",
-    "@libp2p/kad-dht": "^15.1.6",
-    "@libp2p/peer-id": "^5.1.7",
-    "@libp2p/ping": "^2.0.35",
-    "@libp2p/webrtc": "^5.2.19",
-    "@libp2p/websockets": "^9.2.16",
-    "libp2p": "^2.8.11",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "electron-squirrel-startup": "^1.0.1",
+    "hyperswarm": "^4.11.7"
   },
   "devDependencies": {
-    "@eslint/js": "^9.25.0",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "@vitejs/plugin-react": "^4.4.1",
-    "eslint": "^9.25.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
-    "globals": "^16.0.0",
-    "vite": "^6.3.5"
+    "@electron-forge/cli": "^7.8.1",
+    "@electron-forge/maker-deb": "^7.8.1",
+    "@electron-forge/maker-rpm": "^7.8.1",
+    "@electron-forge/maker-squirrel": "^7.8.1",
+    "@electron-forge/maker-zip": "^7.8.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
+    "@electron-forge/plugin-fuses": "^7.8.1",
+    "@electron/fuses": "^1.8.0",
+    "electron": "37.2.0"
   }
 }

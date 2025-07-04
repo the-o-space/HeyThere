@@ -1,104 +1,74 @@
-# Proximity P2P Chat - Decentralized Proximity Messenger
+# HeyThere Messenger
 
-A privacy-friendly, decentralized chat web app for real-time communication with people physically nearby. No centralized server, no persistence, no tracking. Works in browsers on desktop and mobile devices.
+A decentralized, ephemeral messaging application built with Electron and Hyperswarm DHT.
 
-## Project Overview
+## Features
 
-Proximity P2P Chat enables real-time chat with users in the same geographic "cell" using peer-to-peer networking and geolocation. All data is ephemeral - when users leave, messages vanish completely.
+- **Decentralized**: No central server required, uses DHT for peer discovery
+- **Ephemeral**: Messages are not stored anywhere, exist only during the session
+- **Simple**: Clean, modern UI with dark theme
+- **Secure**: Electron's context isolation and secure IPC communication
 
-**Core Features:**
-- Mobile-friendly web app for modern browsers (Android, iOS, desktop)
-- Geographic cell-based chat (e.g., 500m grid squares)
-- No user accounts, tracking, or chat history
-- Volunteer-run bootstrap nodes for network discovery
-- Completely ephemeral messaging
+## Installation
 
-## Tech Stack
+```bash
+npm install
+```
 
-- **Frontend:** React (or Vue/Plain JS), mobile-first CSS
-- **P2P Networking:** libp2p in browser (WebRTC, WebSockets, PubSub)
-- **Location:** Browser Geolocation API with manual override
-- **Bootstrap:** Volunteer-run nodes
-- **Hosting:** Static hosting (Netlify, Vercel, GitHub Pages)
+## Usage
+
+### Running the Application
+
+```bash
+npm start
+```
+
+### Running a Bootstrap Server (Optional)
+
+For initial peer discovery, you can run a bootstrap server:
+
+```bash
+node bootstrap/server.js
+```
+
+The bootstrap server will display connection information including:
+- Bootstrap address (e.g., `localhost:4001`)
+- Topic hex for direct connection
+
+### Connecting to a Chat Room
+
+1. **Using a Bootstrap Server**: Enter the bootstrap address (e.g., `localhost:4001`)
+2. **Using Topic Hex**: Enter the topic hex directly to join a specific room
+
+## Development
+
+```bash
+# Run in development mode with DevTools
+npm run dev
+
+# Build for distribution
+npm run make
+```
 
 ## Architecture
 
-Users get location permission, snap coordinates to a grid cell, and join a PubSub topic for that cell. P2P discovery and messaging occurs within the cell. Bootstrap nodes provide initial network discovery only - they don't store data or see messages.
+- **Main Process** (`src/index.js`): Handles Electron window management and IPC
+- **NetworkManager** (`src/network/NetworkManager.js`): Manages DHT connections and messaging
+- **Renderer** (`src/renderer.js`): UI logic and user interactions
+- **Preload** (`src/preload.js`): Secure bridge between main and renderer processes
 
-## Quick Start
+## How It Works
 
-1. **Clone and install:**
-   ```bash
-   git clone https://github.com/the-o-space/HeyThere.git
-   cd HeyThere
-   npm install
-   ```
+1. The app uses Hyperswarm to create a DHT network
+2. Peers discover each other through the DHT using a shared topic
+3. Messages are broadcast directly between connected peers
+4. No messages are stored - everything is ephemeral
 
-2. **Configure bootstrap nodes in `src/config/bootstrapNodes.js`:**
-   ```javascript
-   export default [
-     '/ip4/203.0.113.42/tcp/4001/ws/p2p/QmPeerIdBootstrap1',
-     // Add more multiaddrs as available
-   ]
-   ```
+## Requirements
 
-3. **Run locally:**
-   ```bash
-   npm start
-   ```
-   Open http://localhost:3000
-
-4. **Deploy:** Use any static hosting service
-
-## Running a Bootstrap Node
-
-1. Clone repo on server with public IP or port forwarding
-2. Run `npm run bootstrap` (see `/bootstrap/README.md`)
-3. Share your multiaddr: `/ip4/YOUR_IP/tcp/4001/ws/p2p/QmYourPeerId...`
-
-## Project Structure
-
-```
-proximity-p2p-chat/
-├── public/
-├── src/
-│   ├── components/        # React/Vue components
-│   ├── libp2p/            # libp2p configuration and logic
-│   ├── config/            # Bootstrap nodes, cell logic
-│   └── App.js
-└── bootstrap/             # Bootstrap node setup instructions
-```
-
-## Implementation Requirements
-
-- **Geolocation:** Browser geolocation API with cell grid snapping
-- **P2P Network:** libp2p with WebRTC transport for direct connections
-- **PubSub:** Topic-based messaging for cell-specific chat rooms
-- **Bootstrap Discovery:** Static list of volunteer nodes for initial peer discovery
-- **Mobile Support:** Responsive design for mobile browsers
-- **Privacy:** No data persistence, fuzzy location matching only
-
-## Features Roadmap
-
-- Geographic cell-based group chat
-- Mobile browser support
-- Volunteer bootstrap network
-- Direct 1:1 P2P messaging
-- Optional message encryption
-- Geolocation + manual cell override
-- Web push notifications (if possible)
-
-## Privacy & Security
-
-- Only fuzzy cell IDs used for matching, never precise coordinates
-- Zero data persistence when no users online
-- No tracking, accounts, or message history
-- Local, real-time P2P communication only
-
-## Contributing
-
-To run a bootstrap node, submit your multiaddr via PR to `/src/config/bootstrapNodes.js` or open an issue. All contributions welcome.
+- Node.js 16 or higher
+- npm or yarn
 
 ## License
 
-MIT
+MIT 
